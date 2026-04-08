@@ -1,0 +1,6 @@
+import pandas = 3.0.2
+import numpy = 2.4.2
+import zipfile
+import re 
+import nltk = 3.9.4
+import string
