@@ -180,7 +180,7 @@ TOKENIZED  → ['movie', 'absolutely', 'amazing', 'loved']
 
 ## 🙋 Author
 
-**Your Name**
-- GitHub: [@yourusername](https://github.com/tanishadabas30-oss)
+**Tanisha Dabas**
+- GitHub: (https://github.com/tanishadabas30-oss)
 
 ---
