@@ -1,79 +1,186 @@
-🎬 IMDB Review Text Preprocessing & Analysis
+# 🎬 IMDB Sentiment Analysis — Tokenization
 
-A beginner-friendly NLP mini-project that demonstrates how raw movie reviews can be cleaned, processed, and transformed into structured data for further analysis or machine learning tasks.
+> A complete NLP preprocessing pipeline built on the IMDB 50K Movie Reviews dataset — covering text cleaning, stopword removal, and tokenization as the foundation for sentiment classification.
 
-🚀 1. Approach
+---
 
-This project follows a step-by-step Natural Language Processing (NLP) pipeline:
+## 📌 Approach
 
-1.	Data Extraction Extract dataset from a .zip file
-   
-3.	Data Loading Load CSV file using pandas
-   
-5.	Text Preprocessing Convert text to lowercase Remove punctuation Remove stopwords Tokenize text
-6.	Output Cleaned and tokenized reviews ready for analysis or ML models
-🛠️ 2. Tech Stack
-Language: Python 🐍 Libraries: pandas → Data handling numpy → Numerical operations nltk → Natural Language Processing re → Regular expressions string → Text processing zipfile → Dataset extraction
-📁 3. Project Structure
+The goal of this project is to preprocess raw movie reviews from the IMDB dataset so they can be used to train a sentiment analysis model. The pipeline follows these stages:
+
+1. **Load** the raw CSV dataset
+2. **Normalize** text to lowercase
+3. **Clean** by removing punctuation
+4. **Filter** by removing stopwords (common words like "the", "is", "and")
+5. **Tokenize** each review into individual words
+6. **Output** a structured, model-ready DataFrame
+
+This approach ensures the text data is stripped of noise before being fed into any machine learning model.
+
+---
+
+## 🛠️ Tech Stack
+
+| Tool | Purpose |
+|---|---|
+| **Python 3.12** | Core programming language |
+| **Pandas** | Data loading and manipulation |
+| **NumPy** | Numerical operations and batch processing |
+| **NLTK** | Stopword removal and tokenization |
+| **Zipfile** | Extracting compressed dataset |
+| **String / Re** | Punctuation removal and regex operations |
+
+---
+
+## 📁 Project Structure
+
+```
 Tokenization/
 │
 ├── dataset/
-│ └── IMDB Dataset.csv
+│   └── IMDB Dataset.csv
+│
+├── notebook.ipynb
 ├── main.py
 ├── config.txt
 ├── output.txt
 └── README.md
-⚙️ 4. How to Run the Project
-Step 1: Clone the Repository
-git clone https://github.com/tanishadabas30-oss/Tokenization/new/main?filename=README.md
-Step 2: Install Dependencies
+```
+
+| File | Description |
+|---|---|
+| `dataset/IMDB Dataset.csv` | Raw dataset with 50,000 movie reviews |
+| `main.py` | Main preprocessing pipeline script |
+| `notebook.ipynb` | Step-by-step Jupyter notebook version |
+| `config.txt` | Configuration settings |
+| `output.txt` | Sample output logs |
+| `README.md` | Project documentation |
+
+---
+
+## ▶️ How to Run
+
+### 1. Clone the Repository
+```bash
+https://github.com/tanishadabas30-oss/Tokenization/edit/main/README.md
+```
+
+### 2. Install Dependencies
+```bash
 pip install pandas numpy nltk
-Step 3: Run the Script
+```
+
+### 3. Download NLTK Data
+```python
+import nltk
+nltk.download('stopwords')
+nltk.download('punkt')
+nltk.download('punkt_tab')
+```
+
+### 4. Add the Dataset
+- Place `IMDB Dataset.csv` inside the `DataSets/` folder
+- Or place the `.zip` file and let the script extract it automatically
+
+### 5. Run the Script
+```bash
 python main.py
-📌 5. Sample Code import pandas as pd
+```
+
+---
+
+## 💻 Sample Code
+
+```python
+import pandas as pd
 import nltk
 import string
-Download required datasets
-nltk.download("stopwords") nltk.download("punkt")
-from nltk.corpus import stopwords from nltk.tokenize import word_tokenize
-Load dataset
+import zipfile
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
+
+# Download required NLTK data
+REQUIRED = ["stopwords", "punkt", "punkt_tab"]
+for i in REQUIRED:
+    nltk.download(i, quiet=True)
+
+# Extract and Load Dataset
+with zipfile.ZipFile('DataSets/IMDB Dataset.csv (3).zip', 'r') as z:
+    z.extractall('DataSets/')
+
 df = pd.read_csv('DataSets/IMDB Dataset.csv')
-Convert to lowercase
+
+# Step 1 - Lowercase
 df['review'] = df['review'].str.lower()
-Remove punctuation
-def remove_punc(text): return text.translate(str.maketrans('', '', string.punctuation))
+
+# Step 2 - Remove Punctuation
+exclude = string.punctuation
+def remove_punc(text):
+    return text.translate(str.maketrans('', '', exclude))
+
 df['review'] = df['review'].apply(remove_punc)
-Remove stopwords
+
+# Step 3 - Remove Stopwords
 stop_words = set(stopwords.words('english'))
-def remove_stopwords(text): return " ".join([word for word in text.split() if word not in stop_words])
+def remove_stopwords(text):
+    return " ".join([w for w in text.split() if w not in stop_words])
+
 df['cleaned_review'] = df['review'].apply(remove_stopwords)
-Tokenization
+
+# Step 4 - Tokenization
 df['tokenized_review'] = df['cleaned_review'].apply(word_tokenize)
-print(df.head())
-🔍 6. Passage Analysis (What’s Happening?)
-Let’s break down how a raw review is transformed:
-📝 Original Review:
-"This movie was AMAZING! I really loved it!!!"
-🔽 Step-by-Step Transformation:
-Lowercase Conversion
-this movie was amazing! i really loved it!!!
-Punctuation Removal
-this movie was amazing i really loved it
-Stopword Removal
-movie amazing really loved
-Tokenization
-['movie', 'amazing', 'really', 'loved']
-🎯 7. Why This Project Matters
-Converts unstructured text → structured data
-Essential for:
-Sentiment Analysis
-Machine Learning models
-Text classification
-Builds a strong foundation in NLP
-💡 8. Future Improvements
-Add stemming & lemmatization
-Perform sentiment analysis
-Train ML models (Naive Bayes, Logistic Regression)
-Visualize word frequencies using WordCloud
-📌 9. Conclusion
-This project demonstrates the core NLP preprocessing pipeline, which is the first and most crucial step before applying any machine learning algorithm to text data.
+
+print(df[['review', 'cleaned_review', 'tokenized_review']].head())
+```
+
+---
+
+## 📊 Output Analysis
+
+### Sample Output
+
+| review | cleaned_review | tokenized_review |
+|---|---|---|
+| "this movie was absolutely amazing..." | "movie absolutely amazing..." | ['movie', 'absolutely', 'amazing'] |
+| "worst film i have ever seen..." | "worst film ever seen..." | ['worst', 'film', 'ever', 'seen'] |
+
+### What Each Stage Does
+
+```
+ORIGINAL   → "This movie was absolutely amazing and I loved it"
+LOWERCASE  → "this movie was absolutely amazing and i loved it"
+NO PUNCT   → "this movie was absolutely amazing and i loved it"
+NO STOPS   → "movie absolutely amazing loved"
+TOKENIZED  → ['movie', 'absolutely', 'amazing', 'loved']
+```
+
+### Dataset Overview
+- **Total Reviews:** 50,000
+- **Classes:** Positive / Negative (balanced — 25,000 each)
+- **Avg Review Length:** ~230 words
+- **After Cleaning:** ~60–80% of words retained (stopwords are ~20–40% of raw text)
+
+### Key Observations
+- Removing stopwords significantly reduces noise without losing sentiment-relevant words
+- Lowercasing ensures words like "Movie" and "movie" are treated as the same token
+- Punctuation removal prevents tokens like `"amazing!"` and `"amazing"` from being counted separately
+- Tokenization converts cleaned text into a list format ready for vectorization (TF-IDF, Word2Vec, etc.)
+
+---
+
+## 🔮 Next Steps
+
+- [ ] Stemming / Lemmatization
+- [ ] TF-IDF Vectorization
+- [ ] Model Training (Logistic Regression / Naive Bayes)
+- [ ] Model Evaluation (Accuracy, F1 Score)
+- [ ] Deploy as a Web App
+
+---
+
+## 🙋 Author
+
+**Your Name**
+- GitHub: [@yourusername](https://github.com/tanishadabas30-oss)
+
+---
